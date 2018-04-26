@@ -14,12 +14,11 @@ class Flickr {
 	    let url = `${this.REST_API}?method=${this.METHOD}&api_key=${this.API_KEY}&text=${q}${this.OPTIONS}`;
 
 	    request.get(url, (error, response, body) => {
-	      console.log(error, response, body);
 	      if (error) {
 	        next(error);
         }
-	    	let flickerResponse = JSON.parse(response.body);
-	    	let url = (flickerResponse.photos.photo[0] && flickerResponse.photos.photo[0].url_q) ? flickerResponse.photos.photo[0].url_q : null;
+	    	let content = JSON.parse(body);
+	    	let url = (content.photos.photo[0] && content.photos.photo[0].url_q) ? content.photos.photo[0].url_q : null;
 	    	let result = {
 	    		url: url
 	    	};
