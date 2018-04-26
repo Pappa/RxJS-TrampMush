@@ -31,7 +31,7 @@ class Server {
     // Sentiment
     this.app.post('/sentiment', this.sentiments.getSentiment.bind(this.sentiments));
     // Image
-    this.app.get('/image', this.flickr.getImage.bind(this.getImage));
+    this.app.get('/image', this.flickr.getImage.bind(this.flickr));
   }
 
   config() {
