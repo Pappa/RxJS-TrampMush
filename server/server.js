@@ -27,16 +27,16 @@ class Server {
 
   api() {
     // Tweets SSE endpoint
-    this.app.get('/tweets', this.sse.getTweetStream);
+    this.app.get('/tweets', this.sse.getTweetStream.bind(this.sse));
     // Sentiment
-    this.app.post('/sentiment', this.sentiments.getSentiment);
+    this.app.post('/sentiment', this.sentiments.getSentiment.bind(this.sentiments));
     // Image
-    this.app.get('/image', this.flickr.getImage);
+    this.app.get('/image', this.flickr.getImage.bind(this.getImage));
   }
 
   config() {
     // static paths
-    this.app.use(express.static(path.join(__dirname, "../client")));
+    this.app.use(express.static(path.join(__dirname, "../dist")));
     this.app.use("/node_modules", express.static(path.join(__dirname, "../../node_modules")));
 
     // middleware
