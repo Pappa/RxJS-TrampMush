@@ -9,6 +9,7 @@ import * as Models from '../core/models/Models';
 @Component({
   selector: 'sentiment',
   templateUrl: 'sentiment.component.html',
+  styleUrls: ['./sentiment.component.css'],
   animations: [
     trigger('pulse', [
       transition('* <=> *', [
