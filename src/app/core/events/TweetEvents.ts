@@ -28,7 +28,7 @@ export class TweetEvents {
     }
 
     responses = {
-        getSentimentSuccess: new Subject<Models.Sentiment>(),
+        getSentimentSuccess: new Subject<string>(),
         getSentimentError: new Subject<Models.Error>(),
         getTweetStreamSuccess: new Subject<Models.Tweet>()
     }
@@ -37,7 +37,7 @@ export class TweetEvents {
         private eventSourceUtil: EventSourceUtil,
         private tweetUtil: TweetUtil,
         private tweetEventsMapper: TweetEventsMapper
-    ) { 
+    ) {
         this.initGetSentiment();
         this.initGetTweetStream();
     }
@@ -63,7 +63,7 @@ export class TweetEvents {
             return ajax.response.result;
         })
         .subscribe((sentiment: Models.Sentiment) => {
-            this.responses.getSentimentSuccess.next(sentiment);
+            this.responses.getSentimentSuccess.next(sentiment.sentiment.toLowerCase());
         });
     }
 

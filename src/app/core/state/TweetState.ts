@@ -6,7 +6,7 @@ import { TweetUtil } from "../util/TweetUtil";
 export class TweetState {
 
     tweet: Models.Tweet;
-    sentiment: Models.Sentiment;
+    sentiment: string;
     error: Models.Error;
     trimmedTweetText: string;
 
@@ -20,7 +20,7 @@ export class TweetState {
         this.trimmedTweetText = this.tweetUtil.trimTweetText(tweet.text);
     }
 
-    public setSentiment(sentiment: Models.Sentiment): void {
+    public setSentiment(sentiment: string): void {
         this.sentiment = sentiment;
     }
 

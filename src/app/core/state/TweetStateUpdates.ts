@@ -17,7 +17,7 @@ export class TweetStateUpdates {
         this.subject = new BehaviorSubject(tweetState);
 
         this.tweetEvents.responses.getSentimentSuccess
-            .subscribe((sentiment: Models.Sentiment) => {
+            .subscribe((sentiment: string) => {
                 this.tweetState.setSentiment(sentiment);
                 this.subject.next(this.tweetState);
             });
