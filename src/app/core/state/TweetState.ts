@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Error, Tweet } from '../models/Models';
+import { Error, Image, Tweet } from '../models/Models';
 import { TweetUtil } from "../util/TweetUtil";
 
 @Injectable()
@@ -9,6 +9,7 @@ export class TweetState {
     sentiment: string;
     error: Error;
     trimmedTweetText: string;
+    image: Image;
 
     constructor(
         private tweetUtil: TweetUtil
@@ -27,5 +28,9 @@ export class TweetState {
     public setError(error: Error): void {
         this.error = error;
     }
+
+  public setImage(image: Image): void {
+    this.image = image;
+  }
 
 }

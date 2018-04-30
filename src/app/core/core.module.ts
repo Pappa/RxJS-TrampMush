@@ -6,10 +6,6 @@ import { TweetEvents } from "./events/TweetEvents";
 
 import { TweetEventsMapper } from "./mappers/TweetEventsMapper";
 
-import { ImageState } from "./state/ImageState";
-import { ImageStateUpdates } from "./state/ImageStateUpdates";
-import { ImageEvents } from "./events/ImageEvents";
-
 import { EventSourceUtil } from "./util/EventSourceUtil";
 import { TweetUtil } from "./util/TweetUtil";
 
@@ -19,9 +15,6 @@ import { TweetUtil } from "./util/TweetUtil";
 	TweetStateUpdates,
 	TweetEvents,
 	TweetEventsMapper,
-	ImageState,
-	ImageStateUpdates,
-	ImageEvents,
 	EventSourceUtil,
 	TweetUtil
   ]

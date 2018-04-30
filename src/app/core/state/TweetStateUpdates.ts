@@ -35,5 +35,17 @@ export class TweetStateUpdates {
                 this.subject.next(this.tweetState);
             });
 
+        this.tweetEvents.responses.getImageSuccess
+          .subscribe((image: Models.Image) => {
+            this.tweetState.setImage(image);
+            this.subject.next(this.tweetState);
+          });
+
+        this.tweetEvents.responses.getImageError
+          .subscribe((error: Models.Error) => {
+            this.tweetState.setImage(null);
+            this.subject.next(null);
+          });
+
     }
 }

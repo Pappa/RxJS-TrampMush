@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AjaxResponse, AjaxError } from 'rxjs/observable/dom/AjaxObservable';
+import { Http, Response } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/map';
@@ -10,7 +11,6 @@ import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import { Subscriber } from 'rxjs/Subscriber';
 import * as Models from '../models/Models';
 import { EventSourceUtil } from '../util/EventSourceUtil';
 import { TweetUtil } from '../util/TweetUtil';
@@ -19,27 +19,28 @@ import { TweetEventsMapper } from '../mappers/TweetEventsMapper';
 @Injectable()
 export class TweetEvents {
 
-    actions = {
-        clickPicture: new Subject<void>()
-    }
-
     requests = {
-        getSentiment: new Subject<string>()
-    }
+        getSentiment: new Subject<string>(),
+        getImage: new Subject<string>()
+    };
 
     responses = {
         getSentimentSuccess: new Subject<string>(),
         getSentimentError: new Subject<Models.Error>(),
-        getTweetStreamSuccess: new Subject<Models.Tweet>()
-    }
+        getTweetStreamSuccess: new Subject<Models.Tweet>(),
+        getImageSuccess: new Subject<Models.Image>(),
+        getImageError: new Subject<Models.Error>()
+    };
 
     constructor(
         private eventSourceUtil: EventSourceUtil,
         private tweetUtil: TweetUtil,
-        private tweetEventsMapper: TweetEventsMapper
+        private tweetEventsMapper: TweetEventsMapper,
+        private http: Http
     ) {
         this.initGetSentiment();
         this.initGetTweetStream();
+        this.initGetImage();
     }
 
     private initGetSentiment(): void {
@@ -74,6 +75,23 @@ export class TweetEvents {
         .map(this.tweetEventsMapper.TwitterTweet_Tweet)
         .subscribe(tweet => {
             this.responses.getTweetStreamSuccess.next(tweet);
+        });
+    }
+
+    private initGetImage(): void {
+      this.requests.getImage
+        .concatMap((search: string) => {
+          return this.http.get(`/image?q=${search}`)
+            .catch((response: Response) => {
+              this.responses.getImageError.next(response.json());
+              return Observable.empty();
+            })
+        })
+        .map((response: Response): Models.Image => {
+          return response.json();
+        })
+        .subscribe((image: Models.Image) => {
+          this.responses.getImageSuccess.next(image);
         });
     }
 }
