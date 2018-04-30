@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AjaxResponse, AjaxError } from 'rxjs/observable/dom/AjaxObservable';
-import { Http, Response } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/map';
@@ -35,8 +34,7 @@ export class TweetEvents {
     constructor(
         private eventSourceUtil: EventSourceUtil,
         private tweetUtil: TweetUtil,
-        private tweetEventsMapper: TweetEventsMapper,
-        private http: Http
+        private tweetEventsMapper: TweetEventsMapper
     ) {
         this.initGetSentiment();
         this.initGetTweetStream();
@@ -81,14 +79,16 @@ export class TweetEvents {
     private initGetImage(): void {
       this.requests.getImage
         .concatMap((search: string) => {
-          return this.http.get(`/image?q=${search}`)
-            .catch((response: Response) => {
-              this.responses.getImageError.next(response.json());
-              return Observable.empty();
-            })
+          return Observable.ajax({
+            url: `/image?q=${search}`
+          })
+          .catch((ajax: AjaxError) => {
+            this.responses.getImageError.next(ajax);
+            return Observable.empty();
+          })
         })
-        .map((response: Response): Models.Image => {
-          return response.json();
+        .map((ajax: AjaxResponse): Models.Image => {
+          return ajax.response;
         })
         .subscribe((image: Models.Image) => {
           this.responses.getImageSuccess.next(image);
