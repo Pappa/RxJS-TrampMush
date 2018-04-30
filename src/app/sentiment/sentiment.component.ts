@@ -22,7 +22,6 @@ export class SentimentComponent {
   @Input() sentiment: string;
 
   setSentimentClass() {
-    console.log('setSentimentClass');
     if (this.sentiment) {
       return 'sentiment-' + this.sentiment;
     }
