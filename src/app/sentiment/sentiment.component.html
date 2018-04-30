@@ -1,1 +1,1 @@
-<div id="sentiment" [@pulse]="sentiment" [ngClass]="setSentimentClass()"></div>
+<div id="sentiment" *ngIf="sentiment" [@pulse]="sentiment" [ngClass]="setSentimentClass()"></div>

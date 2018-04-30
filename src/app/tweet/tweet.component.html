@@ -1,1 +1,1 @@
-<div id="tweet" [innerHtml]="tweet?.text"></div>
+<div id="tweet" *ngIf="tweet?.text" [innerHtml]="tweet?.text"></div>
