@@ -10,6 +10,7 @@ export interface Tweet {
 	text: string
 	id: number
 	username: string
+  trimmed: string
 }
 
 export interface Sentiment {
@@ -22,10 +23,12 @@ export interface Error {
 	message: string
 }
 
-export interface Response<T> {
-	data: T
-}
-
 export interface Image {
 	url: string
+}
+
+export interface CombinedResponse {
+  tweet: Tweet
+  image: Image
+  sentiment: Sentiment
 }

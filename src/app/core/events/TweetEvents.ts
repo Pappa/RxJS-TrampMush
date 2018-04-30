@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AjaxResponse, AjaxError } from 'rxjs/observable/dom/AjaxObservable';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/filter';
@@ -20,17 +20,8 @@ import { TweetEventsMapper } from '../mappers/TweetEventsMapper';
 @Injectable()
 export class TweetEvents {
 
-    requests = {
-        getSentiment: new Subject<string>(),
-        getImage: new Subject<string>()
-    };
-
     responses = {
-        getSentimentSuccess: new Subject<string>(),
-        getSentimentError: new Subject<Models.Error>(),
-        getTweetStreamSuccess: new Subject<Models.Tweet>(),
-        getImageSuccess: new Subject<Models.Image>(),
-        getImageError: new Subject<Models.Error>()
+        getTweetStreamSuccess: new Subject<Models.CombinedResponse>()
     };
 
     constructor(
@@ -38,26 +29,7 @@ export class TweetEvents {
         private tweetUtil: TweetUtil,
         private tweetEventsMapper: TweetEventsMapper
     ) {
-        this.initGetSentiment();
         this.initGetTweetStream();
-        this.initGetImage();
-    }
-
-    private initGetSentiment(): void {
-        this.requests.getSentiment
-        .concatMap((search: string) => {
-          return this.getSentiment(search)
-            .catch((ajax: AjaxError) => {
-                this.responses.getSentimentError.next(ajax);
-                return Observable.empty();
-            })
-        })
-        .map((ajax: AjaxResponse): Models.Sentiment => {
-            return ajax.response.result;
-        })
-        .subscribe((sentiment: Models.Sentiment) => {
-            this.responses.getSentimentSuccess.next(sentiment.sentiment.toLowerCase());
-        });
     }
 
     private initGetTweetStream(): void {
@@ -65,35 +37,28 @@ export class TweetEvents {
         .filter(this.tweetUtil.filterUnwantedTweets.bind(this.tweetUtil))
         .throttleTime(10000)
         .map(this.tweetEventsMapper.TwitterTweet_Tweet)
-        .subscribe(tweet => {
-            this.responses.getTweetStreamSuccess.next(tweet);
+        .switchMap(tweet => {
+          return Observable.forkJoin(
+            Observable.of(tweet),
+            this.getImage(tweet.trimmed),
+            this.getSentiment(tweet.text)
+          );
+        })
+        .subscribe(([tweet, image, sentiment]) => {
+            this.responses.getTweetStreamSuccess.next({ tweet, image, sentiment });
         });
     }
 
-    private initGetImage(): void {
-      this.requests.getImage
-        .concatMap((search: string) => {
-          return this.getImage(search)
-          .catch((ajax: AjaxError) => {
-            this.responses.getImageError.next(ajax);
-            return Observable.empty();
-          })
-        })
-        .map((ajax: AjaxResponse): Models.Image => {
-          return ajax.response;
-        })
-        .subscribe((image: Models.Image) => {
-          this.responses.getImageSuccess.next(image);
-        });
-    }
-
-    private getImage(search: string): Observable<AjaxResponse> {
+    private getImage(search: string): Observable<Models.Image> {
       return Observable.ajax({
         url: `/image?q=${search}`
+      })
+      .map((ajax: AjaxResponse): Models.Image => {
+        return ajax.response;
       });
     }
 
-  private getSentiment(search: string): Observable<AjaxResponse> {
+  private getSentiment(search: string): Observable<Models.Sentiment> {
     return Observable.ajax({
       url: '/sentiment',
       body: `txt=${search}`,
@@ -102,6 +67,9 @@ export class TweetEvents {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json'
       }
+    })
+    .map((ajax: AjaxResponse): Models.Sentiment => {
+      return ajax.response.result;
     });
   }
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {TweetState} from "./TweetState";
-import {TweetEvents} from "../events/TweetEvents";
-import * as Models from "../models/Models";
+import {TweetState} from './TweetState';
+import {TweetEvents} from '../events/TweetEvents';
 
 @Injectable()
 export class TweetStateUpdates {
@@ -16,36 +15,13 @@ export class TweetStateUpdates {
 
         this.subject = new BehaviorSubject(tweetState);
 
-        this.tweetEvents.responses.getSentimentSuccess
-            .subscribe((sentiment: string) => {
-                this.tweetState.setSentiment(sentiment);
-                this.subject.next(this.tweetState);
-            });
-
-        this.tweetEvents.responses.getSentimentError
-            .subscribe((error: Models.Error) => {
-                this.tweetState.setSentiment(null);
-                this.tweetState.setError(error);
-                this.subject.next(this.tweetState);
-            });
-
         this.tweetEvents.responses.getTweetStreamSuccess
-            .subscribe((tweet) => {
-                this.tweetState.setTweet(tweet);
-                this.subject.next(this.tweetState);
+            .subscribe(({ tweet, image, sentiment }) => {
+              this.tweetState.setTweet(tweet);
+              this.tweetState.setImage(image);
+              this.tweetState.setSentiment(sentiment.sentiment.toLowerCase());
+              this.subject.next(this.tweetState);
             });
-
-        this.tweetEvents.responses.getImageSuccess
-          .subscribe((image: Models.Image) => {
-            this.tweetState.setImage(image);
-            this.subject.next(this.tweetState);
-          });
-
-        this.tweetEvents.responses.getImageError
-          .subscribe((error: Models.Error) => {
-            this.tweetState.setImage(null);
-            this.subject.next(null);
-          });
 
     }
 }

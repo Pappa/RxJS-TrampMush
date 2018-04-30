@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Error, Image, Tweet } from '../models/Models';
-import { TweetUtil } from "../util/TweetUtil";
+import { TweetUtil } from '../util/TweetUtil';
 
 @Injectable()
 export class TweetState {
