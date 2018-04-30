@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { trigger, style, transition, animate, keyframes } from '@angular/animations';
 
 @Component({
   selector: 'sentiment',
   templateUrl: 'sentiment.component.html',
   styleUrls: ['./sentiment.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('pulse', [
       transition('* <=> *', [
@@ -21,6 +22,7 @@ export class SentimentComponent {
   @Input() sentiment: string;
 
   setSentimentClass() {
+    console.log('setSentimentClass');
     if (this.sentiment) {
       return 'sentiment-' + this.sentiment;
     }
