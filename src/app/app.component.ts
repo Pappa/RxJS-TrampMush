@@ -45,7 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.imageEvents.requests.getImage.next(this.trimmedTweetText);
     }
     this.sentiment = state.sentiment;
-    console.log(this.sentiment);
     if (state.tweet && this.text !== state.tweet.text) {
       this.text = state.tweet.text;
       this.tweetEvents.requests.getSentiment.next(state.tweet.text);

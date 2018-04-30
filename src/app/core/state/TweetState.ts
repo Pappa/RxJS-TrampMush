@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import * as Models from '../models/Models';
+import { Error, Tweet } from '../models/Models';
 import { TweetUtil } from "../util/TweetUtil";
 
 @Injectable()
 export class TweetState {
 
-    tweet: Models.Tweet;
+    tweet: Tweet;
     sentiment: string;
-    error: Models.Error;
+    error: Error;
     trimmedTweetText: string;
 
     constructor(
@@ -15,7 +15,7 @@ export class TweetState {
     ) {
     }
 
-    public setTweet(tweet: Models.Tweet): void {
+    public setTweet(tweet: Tweet): void {
         this.tweet = tweet;
         this.trimmedTweetText = this.tweetUtil.trimTweetText(tweet.text);
     }
@@ -24,7 +24,7 @@ export class TweetState {
         this.sentiment = sentiment;
     }
 
-    public setError(error: Models.Error): void {
+    public setError(error: Error): void {
         this.error = error;
     }
 
