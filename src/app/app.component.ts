@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TweetState } from './core/state/TweetState';
 import { TweetStateUpdates } from './core/state/TweetStateUpdates';
-import { Image, Tweet } from './core/models/Models';
+import { Image, Sentiment, Tweet } from './core/models/Models';
 
 @Component({
   selector: 'app',
@@ -12,7 +12,7 @@ import { Image, Tweet } from './core/models/Models';
 export class AppComponent implements OnInit, OnDestroy {
 
   image: Image;
-  sentiment: string;
+  sentiment: Sentiment;
   tweet: Tweet;
 
   constructor(

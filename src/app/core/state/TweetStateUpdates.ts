@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {TweetState} from './TweetState';
-import {TweetEvents} from '../events/TweetEvents';
+import { TweetState } from './TweetState';
+import { TweetEvents } from '../events/TweetEvents';
 
 @Injectable()
 export class TweetStateUpdates {
@@ -19,7 +19,7 @@ export class TweetStateUpdates {
             .subscribe(({ tweet, image, sentiment }) => {
               this.tweetState.setTweet(tweet);
               this.tweetState.setImage(image);
-              this.tweetState.setSentiment(sentiment.sentiment.toLowerCase());
+              this.tweetState.setSentiment(sentiment);
               this.subject.next(this.tweetState);
             });
 

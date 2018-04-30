@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { trigger, style, transition, animate, keyframes } from '@angular/animations';
+import { Sentiment } from '../core/models/Models';
 
 @Component({
   selector: 'sentiment',
@@ -19,7 +20,7 @@ import { trigger, style, transition, animate, keyframes } from '@angular/animati
   ]
 })
 export class SentimentComponent {
-  @Input() sentiment: string;
+  @Input() sentiment: Sentiment;
 
   setSentimentClass() {
     if (this.sentiment) {
