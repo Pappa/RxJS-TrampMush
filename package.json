@@ -1,5 +1,5 @@
 {
-  "name": "rx-js-ng-tramp-mush",
+  "name": "ng-tramp-mush",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -21,6 +21,10 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@ngrx/effects": "^5.2.0",
+    "@ngrx/schematics": "^5.2.0",
+    "@ngrx/store": "^5.2.0",
+    "@ngrx/store-devtools": "^5.2.0",
     "body-parser": "^1.18.2",
     "core-js": "^2.4.1",
     "dotenv": "^5.0.1",
