@@ -10,6 +10,13 @@ import { TweetComponent } from './tweet/tweet.component';
 import { SentimentComponent } from './sentiment/sentiment.component';
 
 import { CoreModule } from "./core/core.module";
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './app.effects';
+import * as fromApp from './app.reducer';
 
 
 @NgModule({
@@ -23,7 +30,11 @@ import { CoreModule } from "./core/core.module";
     BrowserModule,
     HttpModule,
     CoreModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([AppEffects]),
+    StoreModule.forFeature('app', fromApp.reducer)
   ],
   providers: [],
   bootstrap: [AppComponent]
